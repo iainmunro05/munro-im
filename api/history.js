@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
@@ -29,12 +29,23 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'GET') {
+      const limit = req.query && req.query.limit ? req.query.limit : '100';
       const response = await fetch(
-        `${supabaseUrl}/rest/v1/saved_clauses?order=created_at.desc&limit=5`,
+        `${supabaseUrl}/rest/v1/saved_clauses?order=created_at.desc&limit=${limit}`,
         { headers }
       );
       const data = await response.json();
       return res.status(200).json(data);
+    }
+
+    if (req.method === 'DELETE') {
+      const { id } = req.body;
+      if (!id) return res.status(400).json({ error: 'No id provided' });
+      const response = await fetch(
+        `${supabaseUrl}/rest/v1/saved_clauses?id=eq.${id}`,
+        { method: 'DELETE', headers }
+      );
+      return res.status(response.ok ? 200 : 400).json({ success: response.ok });
     }
 
     return res.status(405).json({ error: 'Method not allowed' });
