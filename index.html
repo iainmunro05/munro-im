@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Munro IM — Contract Clause Explainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0F1F3D;
+    --navy-mid: #1A3560;
+    --slate: #4A5568;
+    --slate-light: #718096;
+    --rule: #E2E8F0;
+    --bg: #F8F9FB;
+    --surface: #FFFFFF;
+    --accent: #1D6FA4;
+    --accent-light: #EBF4FB;
+    --accent-mid: #2980B9;
+    --green: #0F6E56;
+    --green-light: #E1F5EE;
+    --amber: #854F0B;
+    --amber-light: #FAEEDA;
+    --red: #A32D2D;
+    --red-light: #FCEBEB;
+    --purple: #3C3489;
+    --purple-light: #EEEDFE;
+    --text: #1A202C;
+    --text-muted: #4A5568;
+    --text-faint: #718096;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  header {
+    background: var(--navy);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .logo-mark {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 22px;
+    color: #FFFFFF;
+    letter-spacing: -0.02em;
+  }
+
+  .logo-tag {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: #fff; }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(28px, 5vw, 42px);
+    line-height: 1.15;
+    color: var(--navy);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero p {
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .input-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .contract-type-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .type-pill {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--rule);
+    background: var(--bg);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .type-pill:hover { border-color: var(--accent); color: var(--accent); }
+  .type-pill.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .input-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 140px;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.875rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+    resize: vertical;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  textarea:focus { border-color: var(--accent); background: white; }
+  textarea::placeholder { color: var(--text-faint); }
+
+  .input-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .char-hint { font-size: 12px; color: var(--text-faint); }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.65rem 1.5rem;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-primary:hover { background: var(--navy-mid); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.6rem 1.2rem;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+  .identified-clause {
+    display: none;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--accent-light);
+    border: 1px solid #B5D4F4;
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 13px;
+  }
+
+  .identified-clause .clause-badge {
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .identified-clause .clause-name {
+    color: var(--navy);
+    font-weight: 500;
+    flex: 1;
+  }
+
+  .identified-clause .clause-override {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+    white-space: nowrap;
+  }
+
+  .results-grid {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .result-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .result-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .result-icon.blue { background: var(--accent-light); }
+  .result-icon.green { background: var(--green-light); }
+  .result-icon.amber { background: var(--amber-light); }
+  .result-icon.red { background: var(--red-light); }
+  .result-icon.purple { background: var(--purple-light); }
+
+  .result-card-header h3 {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .result-card-body {
+    padding: 1.1rem 1.25rem;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--text-muted);
+  }
+
+  .result-card-body p { margin-bottom: 0.5rem; }
+  .result-card-body p:last-child { margin-bottom: 0; }
+  .result-card-body ul { padding-left: 1.2rem; margin: 0.25rem 0; }
+  .result-card-body li { margin-bottom: 0.35rem; }
+
+  .skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 6px;
+    height: 14px;
+    margin-bottom: 8px;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .loading-lines .skeleton:last-child { width: 70%; }
+
+  .chat-section {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg);
+  }
+
+  .chat-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+  .chat-header span {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .chat-messages {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .msg { display: flex; gap: 0.75rem; align-items: flex-start; }
+
+  .msg-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .msg-avatar.user { background: var(--navy); color: white; }
+  .msg-avatar.ai { background: var(--accent-light); color: var(--accent); }
+
+  .msg-bubble {
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.65rem 0.9rem;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--text-muted);
+    max-width: calc(100% - 44px);
+  }
+
+  .msg.user .msg-bubble {
+    background: var(--navy);
+    color: rgba(255,255,255,0.9);
+    border-color: var(--navy);
+    margin-left: auto;
+  }
+
+  .msg.user { flex-direction: row-reverse; }
+
+  .chat-input-row {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--rule);
+    background: var(--bg);
+  }
+
+  .chat-input-row input {
+    flex: 1;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.6rem 1rem;
+    font-size: 13.5px;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .chat-input-row input:focus { border-color: var(--accent); }
+  .chat-input-row input::placeholder { color: var(--text-faint); }
+
+  .chat-send-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .chat-send-btn:hover { background: var(--navy); }
+  .chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .suggested-questions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0 1.25rem 1rem;
+  }
+
+  .suggested-q {
+    background: var(--accent-light);
+    border: 1px solid #B5D4F4;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .suggested-q:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+  .error-msg {
+    display: none;
+    background: var(--red-light);
+    border: 1px solid #F7C1C1;
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    font-size: 13px;
+    color: var(--red);
+    margin-bottom: 1rem;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--text-faint);
+    line-height: 1.7;
+  }
+
+  footer strong { color: var(--text-muted); }
+
+  @media (max-width: 600px) {
+    main { padding: 2rem 1rem 4rem; }
+    header { padding: 0 1rem; }
+    .logo-tag { display: none; }
+    .nav-links { gap: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-mark">Munro IM</span>
+    <span class="logo-tag">Infrastructure Management</span>
+  </div>
+  <nav>
+    <ul class="nav-links">
+      <li><a href="#">Tool</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Sign in</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <p class="hero-eyebrow">Contract Clause Explainer</p>
+    <h1>Understand any clause<br><em>in plain English</em></h1>
+    <p>Paste a JCT or NEC contract clause and get an instant breakdown built for quantity surveyors.</p>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">Contract type</label>
+    <div class="contract-type-row">
+      <button class="type-pill active" data-type="auto">Auto-detect</button>
+      <button class="type-pill" data-type="JCT">JCT</button>
+      <button class="type-pill" data-type="NEC">NEC</button>
+    </div>
+
+    <label class="input-label" for="clause-input">Paste your clause</label>
+    <textarea id="clause-input" placeholder="Paste a contract clause here — for example: 'If the Contractor fails to complete the Works by the Completion Date, the Contractor shall pay or allow to the Employer a sum calculated at the rate stated in the Contract Particulars as liquidated damages...'"></textarea>
+
+    <div class="input-actions">
+      <span class="char-hint" id="char-hint">Tip: the more complete the clause, the better the explanation.</span>
+      <div style="display:flex;gap:0.5rem;">
+        <button class="btn-secondary" id="clear-btn" style="display:none;">Clear</button>
+        <button class="btn-primary" id="explain-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Explain clause
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="error-msg" id="error-msg"></div>
+
+  <div class="identified-clause" id="identified-clause">
+    <span class="clause-badge" id="clause-contract-type">JCT</span>
+    <span class="clause-name" id="clause-name-text">Identified clause</span>
+    <span class="clause-override" id="clause-override">Not right? Override</span>
+  </div>
+
+  <div class="results-grid" id="results-grid">
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="result-icon blue">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1D6FA4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <h3>Plain English explanation</h3>
+      </div>
+      <div class="result-card-body" id="result-plain"></div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="result-icon green">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0F6E56" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3>Commercial implications</h3>
+      </div>
+      <div class="result-card-body" id="result-commercial"></div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="result-icon amber">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#854F0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h3>Actions for the QS</h3>
+      </div>
+      <div class="result-card-body" id="result-actions"></div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="result-icon red">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A32D2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <h3>Common mistakes</h3>
+      </div>
+      <div class="result-card-body" id="result-mistakes"></div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="result-icon purple">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3C3489" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Practical example</h3>
+      </div>
+      <div class="result-card-body" id="result-example"></div>
+    </div>
+  </div>
+
+  <div class="chat-section" id="chat-section">
+    <div class="chat-header">
+      <div class="chat-dot"></div>
+      <span>Ask a follow-up question</span>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="suggested-questions" id="suggested-questions"></div>
+    <div class="chat-input-row">
+      <input type="text" id="chat-input" placeholder="e.g. What if the contractor disputes this clause?" />
+      <button class="chat-send-btn" id="chat-send-btn">Send</button>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <strong>Munro IM</strong> — Infrastructure Management<br>
+  This tool is for educational purposes only. Always consult a qualified professional before acting on contract advice.<br>
+  &copy; 2025 Munro IM
+</footer>
+
+<script>
+const SYSTEM_PROMPT = `You are an expert quantity surveyor and construction contract specialist with deep knowledge of JCT (Joint Contracts Tribunal) and NEC (New Engineering Contract) contracts used in the UK construction industry.
+
+Your role is to help graduate QSs, assistant QSs, placement students, and junior project managers understand contract clauses clearly and practically.
+
+When a user pastes a contract clause, you must respond ONLY with a valid JSON object in this exact format:
+
+{
+  "contractType": "JCT" or "NEC" or "Unknown",
+  "clauseIdentification": "A short name for this clause, e.g. 'Liquidated Damages (JCT clause 2.32)'",
+  "plain": "Plain English explanation of what this clause means. Write as if explaining to a bright graduate on their first week. 2-3 paragraphs.",
+  "commercial": "The commercial implications for the contractor and employer. What money or risk is at stake? What leverage does each party have? 3-5 bullet points as a plain list starting each line with '• '.",
+  "actions": "Specific actions a QS should take in response to this clause. Be practical and concrete. 4-6 bullet points starting each line with '• '.",
+  "mistakes": "Common mistakes junior QSs and PMs make with this type of clause. Be direct and honest. 3-5 bullet points starting each line with '• '.",
+  "example": "A realistic practical example set on a UK construction project. Describe a real scenario where this clause comes into play, what happens, and what the QS should do. 2-3 paragraphs.",
+  "suggestedQuestions": ["Question 1?", "Question 2?", "Question 3?"]
+}
+
+Do not include any text outside the JSON. Do not use markdown formatting inside the JSON values. Use plain text only.`;
+
+const CHAT_SYSTEM_PROMPT = `You are an expert quantity surveyor and construction contract specialist with deep knowledge of JCT and NEC contracts. The user has been analysing a contract clause using the Munro IM tool and now has a follow-up question. Answer clearly, practically, and in plain English. Keep answers focused and useful for a graduate QS. Do not use excessive jargon. Format your response as plain text, not JSON. Be concise but thorough.`;
+
+let contractTypeSelected = 'auto';
+let chatHistory = [];
+let clauseContext = '';
+
+document.querySelectorAll('.type-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('.type-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    contractTypeSelected = pill.dataset.type;
+  });
+});
+
+const clauseInput = document.getElementById('clause-input');
+const charHint = document.getElementById('char-hint');
+const explainBtn = document.getElementById('explain-btn');
+const clearBtn = document.getElementById('clear-btn');
+const errorMsg = document.getElementById('error-msg');
+const resultsGrid = document.getElementById('results-grid');
+const identifiedClause = document.getElementById('identified-clause');
+const chatSection = document.getElementById('chat-section');
+
+clauseInput.addEventListener('input', () => {
+  const len = clauseInput.value.trim().length;
+  charHint.textContent = len > 0 ? `${len} characters` : 'Tip: the more complete the clause, the better the explanation.';
+  clearBtn.style.display = len > 0 ? 'inline-flex' : 'none';
+});
+
+clearBtn.addEventListener('click', () => {
+  clauseInput.value = '';
+  charHint.textContent = 'Tip: the more complete the clause, the better the explanation.';
+  clearBtn.style.display = 'none';
+  resultsGrid.style.display = 'none';
+  identifiedClause.style.display = 'none';
+  chatSection.style.display = 'none';
+  errorMsg.style.display = 'none';
+  chatHistory = [];
+  clauseContext = '';
+});
+
+function showLoading() {
+  resultsGrid.style.display = 'flex';
+  identifiedClause.style.display = 'none';
+  ['plain','commercial','actions','mistakes','example'].forEach(id => {
+    document.getElementById('result-' + id).innerHTML = '<div class="loading-lines"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton" style="width:80%"></div></div>';
+  });
+}
+
+function renderMarkup(text) {
+  if (!text) return '';
+  const lines = text.split('\n').filter(l => l.trim());
+  let html = '';
+  let inList = false;
+  lines.forEach(line => {
+    const trimmed = line.trim();
+    if (trimmed.startsWith('• ')) {
+      if (!inList) { html += '<ul>'; inList = true; }
+      html += `<li>${trimmed.slice(2)}</li>`;
+    } else {
+      if (inList) { html += '</ul>'; inList = false; }
+      html += `<p>${trimmed}</p>`;
+    }
+  });
+  if (inList) html += '</ul>';
+  return html;
+}
+
+async function callAPI(body) {
+  const response = await fetch('/api/claude', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return response.json();
+}
+
+async function explainClause() {
+  const clause = clauseInput.value.trim();
+  if (!clause) { showError('Please paste a contract clause before clicking Explain.'); return; }
+  if (clause.length < 30) { showError('That looks too short to be a full clause. Please paste more of the contract text.'); return; }
+
+  errorMsg.style.display = 'none';
+  explainBtn.disabled = true;
+  explainBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Analysing...';
+  showLoading();
+  chatSection.style.display = 'none';
+
+  const typeHint = contractTypeSelected !== 'auto' ? `The user has indicated this is a ${contractTypeSelected} contract clause.` : '';
+
+  try {
+    const data = await callAPI({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1000,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: 'user', content: `${typeHint}\n\nContract clause:\n\n${clause}` }]
+    });
+
+    if (data.error) {
+      showError('Anthropic error: ' + JSON.stringify(data.detail || data.error));
+      resultsGrid.style.display = 'none';
+      return;
+    }
+
+    if (!data.content) {
+      showError('Unexpected response: ' + JSON.stringify(data));
+      resultsGrid.style.display = 'none';
+      return;
+    }
+
+    const rawText = data.content.map(i => i.text || '').join('');
+    let parsed;
+    try {
+      const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error('No JSON found');
+      parsed = JSON.parse(jsonMatch[0]);
+    } catch {
+      showError('The AI returned an unexpected response. Please try again.');
+      resultsGrid.style.display = 'none';
+      return;
+    }
+
+    clauseContext = `Contract clause analysed:\n${clause}\n\nAnalysis:\nPlain English: ${parsed.plain}\nCommercial: ${parsed.commercial}\nActions: ${parsed.actions}\nMistakes: ${parsed.mistakes}\nExample: ${parsed.example}`;
+    chatHistory = [];
+
+    document.getElementById('result-plain').innerHTML = renderMarkup(parsed.plain);
+    document.getElementById('result-commercial').innerHTML = renderMarkup(parsed.commercial);
+    document.getElementById('result-actions').innerHTML = renderMarkup(parsed.actions);
+    document.getElementById('result-mistakes').innerHTML = renderMarkup(parsed.mistakes);
+    document.getElementById('result-example').innerHTML = renderMarkup(parsed.example);
+
+    if (parsed.clauseIdentification) {
+      document.getElementById('clause-contract-type').textContent = parsed.contractType || 'Contract';
+      document.getElementById('clause-name-text').textContent = parsed.clauseIdentification;
+      identifiedClause.style.display = 'flex';
+    }
+
+    chatSection.style.display = 'block';
+    document.getElementById('chat-messages').innerHTML = '';
+
+    const suggestedQs = document.getElementById('suggested-questions');
+    suggestedQs.innerHTML = '';
+    if (parsed.suggestedQuestions?.length) {
+      parsed.suggestedQuestions.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'suggested-q';
+        btn.textContent = q;
+        btn.addEventListener('click', () => { document.getElementById('chat-input').value = q; sendChatMessage(); });
+        suggestedQs.appendChild(btn);
+      });
+    }
+
+    resultsGrid.style.display = 'flex';
+    resultsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  } catch (err) {
+    showError('Something went wrong connecting to the AI. Please try again in a moment.');
+    resultsGrid.style.display = 'none';
+  } finally {
+    explainBtn.disabled = false;
+    explainBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Explain clause';
+  }
+}
+
+function showError(msg) {
+  errorMsg.textContent = msg;
+  errorMsg.style.display = 'block';
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('chat-send-btn');
+  const messagesEl = document.getElementById('chat-messages');
+  const suggestedQs = document.getElementById('suggested-questions');
+  const question = input.value.trim();
+  if (!question) return;
+
+  input.value = '';
+  sendBtn.disabled = true;
+  suggestedQs.style.display = 'none';
+
+  const userMsg = document.createElement('div');
+  userMsg.className = 'msg user';
+  userMsg.innerHTML = `<div class="msg-avatar user">You</div><div class="msg-bubble">${question}</div>`;
+  messagesEl.appendChild(userMsg);
+
+  const thinkingMsg = document.createElement('div');
+  thinkingMsg.className = 'msg';
+  thinkingMsg.innerHTML = `<div class="msg-avatar ai">IM</div><div class="msg-bubble" style="color:var(--text-faint);font-style:italic;">Thinking...</div>`;
+  messagesEl.appendChild(thinkingMsg);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  chatHistory.push({ role: 'user', content: question });
+
+  try {
+    const data = await callAPI({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1000,
+      system: CHAT_SYSTEM_PROMPT,
+      messages: [
+        { role: 'user', content: `Here is the context for this conversation:\n\n${clauseContext}` },
+        { role: 'assistant', content: 'Understood. I have reviewed the clause and the analysis. Please ask your follow-up question.' },
+        ...chatHistory
+      ]
+    });
+
+    const reply = data.content.map(i => i.text || '').join('').trim();
+    chatHistory.push({ role: 'assistant', content: reply });
+    thinkingMsg.querySelector('.msg-bubble').innerHTML = renderMarkup(reply);
+    thinkingMsg.querySelector('.msg-bubble').style.color = '';
+    thinkingMsg.querySelector('.msg-bubble').style.fontStyle = '';
+
+  } catch {
+    thinkingMsg.querySelector('.msg-bubble').textContent = 'Something went wrong. Please try again.';
+  } finally {
+    sendBtn.disabled = false;
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+}
+
+explainBtn.addEventListener('click', explainClause);
+document.getElementById('chat-send-btn').addEventListener('click', sendChatMessage);
+document.getElementById('chat-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
+});
+document.getElementById('clause-override').addEventListener('click', () => {
+  identifiedClause.style.display = 'none';
+});
+</script>
+</body>
+</html>
