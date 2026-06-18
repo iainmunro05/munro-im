@@ -1,0 +1,3377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Munro IM — Contract Clause Explainer</title>
+<!-- v9.1 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0F1F3D;
+    --navy-mid: #1A3560;
+    --slate: #4A5568;
+    --slate-light: #718096;
+    --rule: #E2E8F0;
+    --bg: #F8F9FB;
+    --surface: #FFFFFF;
+    --accent: #1D6FA4;
+    --accent-light: #EBF4FB;
+    --accent-mid: #2980B9;
+    --green: #0F6E56;
+    --green-light: #E1F5EE;
+    --amber: #854F0B;
+    --amber-light: #FAEEDA;
+    --red: #A32D2D;
+    --red-light: #FCEBEB;
+    --purple: #3C3489;
+    --purple-light: #EEEDFE;
+    --text: #1A202C;
+    --text-muted: #4A5568;
+    --text-faint: #718096;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  header {
+    background: var(--navy);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  header nav { display: flex; align-items: center; }
+
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .logo-mark {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 22px;
+    color: #FFFFFF;
+    letter-spacing: -0.02em;
+  }
+
+  .logo-tag {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links li {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-btn { }
+  .active-nav { color: #fff !important; }
+
+  .nav-links a,
+  .nav-links button {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    padding: 0;
+    line-height: inherit;
+    vertical-align: baseline;
+  }
+
+  .nav-links a:hover,
+  .nav-links button:hover { color: #fff; }
+
+  main {
+    width: 100%;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(28px, 5vw, 42px);
+    line-height: 1.15;
+    color: var(--navy);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero p {
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .input-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .contract-type-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .type-pill {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--rule);
+    background: var(--bg);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .type-pill:hover { border-color: var(--accent); color: var(--accent); }
+  .type-pill.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .input-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 140px;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.875rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+    resize: vertical;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  textarea:focus { border-color: var(--accent); background: white; }
+  textarea::placeholder { color: var(--text-faint); }
+
+  .input-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .char-hint { font-size: 12px; color: var(--text-faint); }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.65rem 1.5rem;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-primary:hover { background: var(--navy-mid); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.6rem 1.2rem;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+  .identified-clause {
+    display: none;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--accent-light);
+    border: 1px solid #B5D4F4;
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 13px;
+  }
+
+  .identified-clause .clause-badge {
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .identified-clause .clause-name {
+    color: var(--navy);
+    font-weight: 500;
+    flex: 1;
+  }
+
+  .identified-clause .clause-override {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+    white-space: nowrap;
+  }
+
+  .results-grid {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .result-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .result-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .result-icon.blue { background: var(--accent-light); }
+  .result-icon.green { background: var(--green-light); }
+  .result-icon.amber { background: var(--amber-light); }
+  .result-icon.red { background: var(--red-light); }
+  .result-icon.purple { background: var(--purple-light); }
+
+  .result-card-header h3 {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .result-card-body {
+    padding: 1.1rem 1.25rem;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--text-muted);
+  }
+
+  .result-card-body p { margin-bottom: 0.5rem; }
+  .result-card-body p:last-child { margin-bottom: 0; }
+  .result-card-body ul { padding-left: 1.2rem; margin: 0.25rem 0; }
+  .result-card-body li { margin-bottom: 0.35rem; }
+
+  .skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 6px;
+    height: 14px;
+    margin-bottom: 8px;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .loading-lines .skeleton:last-child { width: 70%; }
+
+  .chat-section {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg);
+  }
+
+  .chat-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+  .chat-header span {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .chat-messages {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .msg { display: flex; gap: 0.75rem; align-items: flex-start; }
+
+  .msg-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .msg-avatar.user { background: var(--navy); color: white; }
+  .msg-avatar.ai { background: var(--accent-light); color: var(--accent); }
+
+  .msg-bubble {
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.65rem 0.9rem;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--text-muted);
+    max-width: calc(100% - 44px);
+  }
+
+  .msg.user .msg-bubble {
+    background: var(--navy);
+    color: rgba(255,255,255,0.9);
+    border-color: var(--navy);
+    margin-left: auto;
+  }
+
+  .msg.user { flex-direction: row-reverse; }
+
+  .chat-input-row {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--rule);
+    background: var(--bg);
+  }
+
+  .chat-input-row input {
+    flex: 1;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.6rem 1rem;
+    font-size: 13.5px;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .chat-input-row input:focus { border-color: var(--accent); }
+  .chat-input-row input::placeholder { color: var(--text-faint); }
+
+  .chat-send-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .chat-send-btn:hover { background: var(--navy); }
+  .chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .suggested-questions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0 1.25rem 1rem;
+  }
+
+  .suggested-q {
+    background: var(--accent-light);
+    border: 1px solid #B5D4F4;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .suggested-q:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+  .error-msg {
+    display: none;
+    background: var(--red-light);
+    border: 1px solid #F7C1C1;
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    font-size: 13px;
+    color: var(--red);
+    margin-bottom: 1rem;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--text-faint);
+    line-height: 1.7;
+  }
+
+  footer strong { color: var(--text-muted); }
+
+  @media (max-width: 600px) {
+    main { padding: 2rem 1rem 4rem; }
+    header { padding: 0 1rem; }
+    .logo-tag { display: none; }
+    .nav-links { gap: 1.25rem; }
+  }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,31,61,0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+  }
+  .modal h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 24px;
+    color: var(--navy);
+    margin-bottom: 0.25rem;
+  }
+  .modal p.modal-sub {
+    font-size: 13px;
+    color: var(--text-faint);
+    margin-bottom: 1.5rem;
+  }
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-faint);
+    line-height: 1;
+    padding: 4px;
+  }
+  .modal-close:hover { color: var(--text); }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 0.4rem;
+  }
+  .form-group input {
+    width: 100%;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.65rem 1rem;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus { border-color: var(--accent); }
+  .btn-full {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: var(--radius);
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-full.primary { background: var(--navy); color: white; }
+  .btn-full.primary:hover { background: var(--navy-mid); }
+  .btn-full.google {
+    background: white;
+    border: 1px solid var(--rule);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .btn-full.google:hover { border-color: var(--accent); background: var(--accent-light); }
+  .modal-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1rem 0;
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+  .modal-divider::before, .modal-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+  .modal-switch {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 13px;
+    color: var(--text-faint);
+  }
+  .modal-switch a { color: var(--accent); cursor: pointer; text-decoration: underline; }
+  .modal-error {
+    background: var(--red-light);
+    border: 1px solid #F7C1C1;
+    border-radius: var(--radius);
+    padding: 0.6rem 0.9rem;
+    font-size: 13px;
+    color: var(--red);
+    margin-bottom: 1rem;
+    display: none;
+  }
+  .modal-success {
+    background: var(--green-light);
+    border: 1px solid #9FE1CB;
+    border-radius: var(--radius);
+    padding: 0.6rem 0.9rem;
+    font-size: 13px;
+    color: var(--green);
+    margin-bottom: 1rem;
+    display: none;
+  }
+  .user-badge {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+  }
+  .user-badge .avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .save-bar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--green-light);
+    border: 1px solid #9FE1CB;
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 13px;
+    color: var(--green);
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .save-bar span { flex: 1; }
+  .btn-save {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.5rem 1.2rem;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+  .btn-save:hover { opacity: 0.85; }
+  .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+  .history-panel {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg);
+  }
+  .history-header span {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+  .history-header small {
+    font-size: 11px;
+    color: var(--text-faint);
+    font-weight: 400;
+  }
+  .history-list { padding: 0.5rem 0; }
+  .history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+    transition: background 0.15s;
+    gap: 1rem;
+  }
+  .history-item:last-child { border-bottom: none; }
+  .history-item:hover { background: var(--accent-light); }
+  .history-item-info { flex: 1; min-width: 0; }
+  .history-item-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .history-item-meta {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-top: 2px;
+  }
+  .history-item-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--accent-light);
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .history-empty {
+    padding: 2rem 1.25rem;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-faint);
+  }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .about-section {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .about-hero {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  .about-hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(28px, 5vw, 40px);
+    color: var(--navy);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .about-hero h1 em { font-style: italic; color: var(--accent); }
+
+  .about-hero p {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.75;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .about-divider {
+    width: 40px;
+    height: 2px;
+    background: var(--accent);
+    margin: 2.5rem auto;
+  }
+
+  .about-block {
+    margin-bottom: 2.5rem;
+  }
+
+  .about-block h2 {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .about-block p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 0.75rem;
+  }
+
+  .about-block p:last-child { margin-bottom: 0; }
+
+  .about-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .about-feature {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+  }
+
+  .about-feature-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .about-feature h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.35rem;
+  }
+
+  .about-feature p {
+    font-size: 12px;
+    color: var(--text-faint);
+    line-height: 1.6;
+  }
+
+  .about-cta {
+    text-align: center;
+    background: var(--navy);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2rem;
+    margin-top: 3rem;
+  }
+
+  .about-cta h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 26px;
+    color: white;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .about-cta p {
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    margin-bottom: 1.5rem;
+  }
+
+  .about-cta button {
+    background: white;
+    color: var(--navy);
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.75rem 2rem;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .about-cta button:hover { opacity: 0.9; }
+
+
+  /* Pro Badge */
+  .pro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: linear-gradient(135deg, #1A3560, #1D6FA4);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 20px;
+    vertical-align: middle;
+    margin-left: 0.4rem;
+  }
+
+  /* Upgrade banner */
+  .upgrade-banner {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #0F1F3D, #1A3560);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .upgrade-banner p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    margin: 0;
+  }
+
+  .upgrade-banner strong { color: white; }
+
+  .btn-upgrade {
+    background: white;
+    color: var(--navy);
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.45rem 1.1rem;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-upgrade:hover { opacity: 0.85; }
+
+  /* Pricing page */
+  .pricing-section {
+    max-width: 740px;
+    margin: 0 auto;
+  }
+
+  .pricing-hero {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .pricing-hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(28px, 5vw, 40px);
+    color: var(--navy);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+
+  .pricing-hero h1 em { font-style: italic; color: var(--accent); }
+  .pricing-hero p { font-size: 15px; color: var(--text-muted); }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 900px) { .pricing-grid, [style*="grid-template-columns:1fr 1fr 1fr 1fr"] { grid-template-columns: 1fr 1fr !important; } }
+  @media (max-width: 600px) { .pricing-grid, [style*="grid-template-columns:1fr 1fr 1fr 1fr"] { grid-template-columns: 1fr !important; } }
+
+  .pricing-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pricing-features {
+    flex: 1;
+  }
+
+  .pricing-card.featured {
+    border-color: var(--accent);
+    border-width: 2px;
+  }
+
+  .pricing-popular {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .pricing-tier {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 0.5rem;
+  }
+
+  .pricing-price {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 42px;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+  }
+
+  .pricing-price span {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-faint);
+  }
+
+  /* Ensure grey divider line (pricing-desc border) aligns */
+  .pricing-desc {
+    font-size: 13px;
+    color: var(--text-faint);
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 1.5rem;
+    min-height: 3.5rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .pricing-desc {
+    font-size: 13px;
+    color: var(--text-faint);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .pricing-features {
+    list-style: none;
+    margin-bottom: 1.75rem;
+    flex: 1;
+  }
+
+  .pricing-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+    line-height: 1.5;
+  }
+
+  .pricing-features li .check {
+    color: var(--green);
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .pricing-features li .cross {
+    color: var(--text-faint);
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .btn-pricing {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: var(--radius);
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-pricing.primary { background: var(--navy); color: white; }
+  .btn-pricing.primary:hover { background: var(--navy-mid); }
+  .btn-pricing.outline { background: transparent; color: var(--text-muted); border: 1px solid var(--rule); }
+  .btn-pricing.outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  .pricing-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-faint);
+    margin-top: 1rem;
+  }
+
+  .pricing-faq {
+    margin-top: 3rem;
+  }
+
+  .pricing-faq h2 {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--rule);
+    padding: 1rem 0;
+  }
+
+  .faq-item:last-child { border-bottom: none; }
+
+  .faq-q {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+
+  .faq-a {
+    font-size: 13px;
+    color: var(--text-faint);
+    line-height: 1.6;
+  }
+
+  /* PDF export button */
+  .btn-pdf {
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.6rem 1.2rem;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 1rem;
+  }
+
+  .btn-pdf:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+  @media print {
+    /* Hide everything that isn't the explanation */
+    header, footer, nav, .input-card, .chat-section, .save-bar,
+    .upgrade-banner, .history-panel, .btn-pdf, .identified-clause,
+    .sidebar, .error-msg, #upgrade-banner, #pdf-btn,
+    .hero, .usage-counter { display: none !important; }
+
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    body {
+      background: white !important;
+      font-size: 12pt;
+      color: #1A202C;
+      font-family: 'Inter', Georgia, serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    main { padding: 0 !important; max-width: 100% !important; }
+    .page-layout { display: block !important; padding: 0 !important; }
+    .main-column { width: 100% !important; }
+    .results-grid { display: flex !important; flex-direction: column; gap: 0 !important; }
+
+    /* PDF cover header */
+    .pdf-header {
+      display: block !important;
+      padding: 2cm 2cm 1.5cm 2cm;
+      border-bottom: 3px solid #0F1F3D;
+      margin-bottom: 1.5cm;
+    }
+
+    .pdf-header-logo {
+      font-size: 28pt;
+      font-weight: 300;
+      color: #0F1F3D;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5cm;
+      font-family: Georgia, serif;
+    }
+
+    .pdf-header-clause {
+      font-size: 16pt;
+      font-weight: 600;
+      color: #0F1F3D;
+      margin-bottom: 0.2cm;
+    }
+
+    .pdf-header-meta {
+      font-size: 9pt;
+      color: #718096;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Cards — NEVER split across pages */
+    .result-card {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+      display: block !important;
+      margin: 0 2cm 0.8cm 2cm;
+      border: 1pt solid #E2E8F0 !important;
+      border-radius: 6pt !important;
+      overflow: visible !important;
+    }
+
+    .result-card-header {
+      break-after: avoid !important;
+      page-break-after: avoid !important;
+      padding: 0.4cm 0.6cm !important;
+      background: #F8F9FB !important;
+      border-bottom: 1pt solid #E2E8F0 !important;
+    }
+
+    .result-card-header h3 {
+      font-size: 8pt !important;
+      letter-spacing: 0.08em !important;
+    }
+
+    .result-card-body {
+      break-before: avoid !important;
+      page-break-before: avoid !important;
+      padding: 0.5cm 0.6cm !important;
+      font-size: 10pt !important;
+      line-height: 1.7 !important;
+    }
+
+    /* Force each paragraph and list item to also not split */
+    .result-card-body p,
+    .result-card-body li,
+    .result-card-body ul {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+      orphans: 4;
+      widows: 4;
+    }
+
+    /* PDF footer on every page */
+    @page {
+      margin: 0;
+      size: A4;
+    }
+
+    /* Hide result icons in PDF for cleaner look */
+    .result-icon { display: none !important; }
+
+    /* PDF disclaimer */
+    .pdf-disclaimer {
+      display: block !important;
+      margin: 0.5cm 2cm 0 2cm;
+      font-size: 8pt;
+      color: #A0AEC0;
+      border-top: 1pt solid #E2E8F0;
+      padding-top: 0.3cm;
+    }
+  }
+
+  .pdf-disclaimer { display: none; }
+
+  .pdf-header {
+    display: none;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--navy);
+  }
+
+  .pdf-header h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 22px;
+    color: var(--navy);
+    margin-bottom: 0.25rem;
+  }
+
+  .pdf-header p {
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+
+
+  /* Two column layout */
+  .page-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2rem;
+    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  .main-column { min-width: 0; }
+
+  .sidebar {
+    position: sticky;
+    top: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .sidebar-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .sidebar-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg);
+  }
+
+  .sidebar-card-header h3 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .sidebar-card-header a {
+    font-size: 11px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .sidebar-card-header a:hover { text-decoration: underline; }
+
+  /* Sidebar history */
+  .sidebar-history-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .sidebar-history-item:last-child { border-bottom: none; }
+  .sidebar-history-item:hover { background: var(--accent-light); }
+
+  .sidebar-history-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 20px;
+    background: var(--accent-light);
+    color: var(--accent);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .sidebar-history-title {
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sidebar-history-date {
+    font-size: 10px;
+    color: var(--text-faint);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .sidebar-empty {
+    padding: 1.25rem 1.1rem;
+    font-size: 12px;
+    color: var(--text-faint);
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* Sidebar quick reference */
+  .ref-section { padding: 0.5rem 0; }
+
+  .ref-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 0.5rem 1.1rem 0.25rem;
+  }
+
+  .ref-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.35rem 1.1rem;
+    font-size: 12px;
+  }
+
+  .ref-clause {
+    font-weight: 600;
+    color: var(--navy);
+    white-space: nowrap;
+    min-width: 60px;
+    flex-shrink: 0;
+  }
+
+  .ref-desc { color: var(--text-faint); line-height: 1.4; }
+
+  .ref-divider {
+    height: 1px;
+    background: var(--rule);
+    margin: 0.5rem 0;
+  }
+
+  /* Responsive — collapse sidebar on mobile/tablet */
+  @media (max-width: 900px) {
+    .page-layout {
+      grid-template-columns: 1fr;
+      padding: 2rem 1rem 4rem;
+    }
+    .sidebar { position: static; }
+  }
+
+  @media (max-width: 600px) {
+    .page-layout { padding: 1.5rem 1rem 3rem; }
+  }
+
+
+  /* History Page */
+  .history-page-section {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .history-page-hero {
+    margin-bottom: 2rem;
+  }
+
+  .history-page-hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(26px, 4vw, 36px);
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+  }
+
+  .history-page-hero p {
+    font-size: 14px;
+    color: var(--text-faint);
+  }
+
+  .history-search-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    align-items: center;
+  }
+
+  .history-search {
+    flex: 1;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.65rem 1rem;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .history-search:focus { border-color: var(--accent); }
+  .history-search::placeholder { color: var(--text-faint); }
+
+  .history-filter-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--rule);
+    background: var(--bg);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+  }
+
+  .history-filter-pill:hover { border-color: var(--accent); color: var(--accent); }
+  .history-filter-pill.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .history-month-group { margin-bottom: 2rem; }
+
+  .history-month-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .history-page-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.875rem 1.1rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .history-page-item:hover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .history-page-item-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: var(--accent-light);
+    color: var(--accent);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .history-page-item-info { flex: 1; min-width: 0; }
+
+  .history-page-item-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .history-page-item-date {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-top: 2px;
+  }
+
+  .history-page-item-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-faint);
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .history-page-item-delete:hover { color: var(--red); background: var(--red-light); }
+
+  .history-page-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-faint);
+  }
+
+  .history-page-empty h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 22px;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+  }
+
+  .history-page-empty p { font-size: 14px; margin-bottom: 1.5rem; }
+
+  .history-not-signed-in {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .history-not-signed-in h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 24px;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+  }
+
+  .history-not-signed-in p { font-size: 14px; color: var(--text-faint); margin-bottom: 1.5rem; }
+
+
+  /* Three dot menu */
+  .three-dot-menu {
+    position: relative;
+    display: inline-block;
+  }
+
+  .three-dot-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-faint);
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 18px;
+    line-height: 1;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .three-dot-btn:hover { color: var(--text); background: var(--rule); }
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    min-width: 160px;
+    z-index: 50;
+    overflow: hidden;
+  }
+
+  .dropdown-menu.open { display: block; }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 1rem;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.15s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .dropdown-item:hover { background: var(--accent-light); color: var(--accent); }
+  .dropdown-item.danger:hover { background: var(--red-light); color: var(--red); }
+
+  /* Rename modal */
+  .rename-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,31,61,0.5);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .rename-modal-overlay.active { display: flex; }
+
+  .rename-modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .rename-modal h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 1rem;
+  }
+
+  .rename-modal input {
+    width: 100%;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.65rem 1rem;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    outline: none;
+    margin-bottom: 1rem;
+    transition: border-color 0.2s;
+  }
+
+  .rename-modal input:focus { border-color: var(--accent); }
+
+  .rename-modal-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+
+  /* Free tier usage counter */
+  .usage-counter {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 12px;
+    color: var(--text-faint);
+    margin-top: 0.75rem;
+  }
+
+  .usage-counter .usage-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .usage-counter .usage-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+
+  .usage-counter.warning .usage-fill { background: var(--amber); }
+  .usage-counter.danger .usage-fill { background: var(--red); }
+
+
+  /* Locked sections for guests */
+  .result-card.locked {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-card.locked .result-card-body {
+    filter: blur(4px);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .locked-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(248,249,251,0.85);
+    backdrop-filter: blur(2px);
+    z-index: 10;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .locked-overlay svg {
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .locked-overlay p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .locked-overlay strong { color: var(--navy); }
+
+  .locked-overlay .btn-unlock {
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.55rem 1.25rem;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 0.4rem;
+    display: block;
+    width: 100%;
+  }
+
+  .locked-overlay .btn-unlock:hover { background: var(--navy-mid); }
+
+  .locked-overlay .free-note {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin: 0;
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-mark">Munro IM</span>
+    <span class="logo-tag">Infrastructure Management</span>
+  </div>
+  <nav>
+    <ul class="nav-links">
+      <li><button onclick="showPage('tool')" class="nav-btn active-nav" id="nav-tool">Tool</button></li>
+      <li><button onclick="showPage('about')" class="nav-btn" id="nav-about">About</button></li>
+      <li><button onclick="handleHistoryNav()" class="nav-btn" id="nav-history">History</button></li>
+      <li><button onclick="showPage('pricing')" class="nav-btn" id="nav-pricing">Upgrade</button></li>
+      <li><button onclick="handleAuthClick()" id="auth-nav-link">Sign in</button></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Auth Modal -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <button class="modal-close" id="modal-close-btn">&times;</button>
+    <h2 id="modal-title">Sign in</h2>
+    <p class="modal-sub" id="modal-sub">Welcome back to Munro IM</p>
+    <div class="modal-error" id="modal-error"></div>
+    <div class="modal-success" id="modal-success"></div>
+    <button class="btn-full google" id="google-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continue with Google
+    </button>
+    <div class="modal-divider">or</div>
+    <div class="form-group">
+      <label for="auth-email">Email</label>
+      <input type="email" id="auth-email" placeholder="you@example.com" />
+    </div>
+    <div class="form-group">
+      <label for="auth-password">Password</label>
+      <input type="password" id="auth-password" placeholder="••••••••" />
+    </div>
+    <button class="btn-full primary" id="auth-submit-btn">Sign in</button>
+    <div class="modal-switch" id="modal-switch">
+      Don't have an account? <a id="modal-toggle">Sign up</a>
+    </div>
+  </div>
+</div>
+
+
+<main>
+
+<!-- Rename Modal -->
+<div class="rename-modal-overlay" id="rename-modal">
+  <div class="rename-modal">
+    <h3>Rename saved clause</h3>
+    <input type="text" id="rename-input" placeholder="Enter new name..." />
+    <div class="rename-modal-actions">
+      <button class="btn-secondary" onclick="closeRenameModal()">Cancel</button>
+      <button class="btn-primary" onclick="confirmRename()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tool Page -->
+<div class="page active" id="page-tool">
+<div class="page-layout">
+<div class="main-column">
+  <div class="hero">
+    <p class="hero-eyebrow">Contract Clause Explainer</p>
+    <h1>Understand any clause<br><em>in plain English</em></h1>
+    <p>Paste a JCT or NEC contract clause and get an instant breakdown built for quantity surveyors.</p>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">Contract type</label>
+    <div class="contract-type-row">
+      <button class="type-pill active" data-type="auto">Auto-detect</button>
+      <button class="type-pill" data-type="JCT">JCT</button>
+      <button class="type-pill" data-type="NEC">NEC</button>
+    </div>
+
+    <label class="input-label" for="clause-input">Paste your clause</label>
+    <textarea id="clause-input" placeholder="Paste a contract clause here — for example: 'If the Contractor fails to complete the Works by the Completion Date, the Contractor shall pay or allow to the Employer a sum calculated at the rate stated in the Contract Particulars as liquidated damages...'"></textarea>
+
+    <div class="input-actions">
+      <span class="char-hint" id="char-hint">Tip: the more complete the clause, the better the explanation.</span>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <button class="btn-secondary" id="clear-btn" style="display:none;">Clear</button>
+        <button class="btn-primary" id="explain-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Explain clause
+        </button>
+      </div>
+    </div>
+    <div class="usage-counter" id="usage-counter">
+      <span id="usage-text">10 explanations remaining today</span>
+      <div class="usage-bar"><div class="usage-fill" id="usage-fill" style="width:100%"></div></div>
+    </div>
+  </div>
+
+  <div class="error-msg" id="error-msg"></div>
+
+  <!-- History Panel -->
+  <div class="history-panel" id="history-panel">
+    <div class="history-header">
+      <span>My saved clauses</span>
+      <small>Last 5 explanations</small>
+    </div>
+    <div class="history-list" id="history-list">
+      <div class="history-empty">No saved clauses yet. Explain a clause and save it to see it here.</div>
+    </div>
+  </div>
+
+  <!-- Save Bar -->
+  <div class="save-bar" id="save-bar">
+    <span>Want to save this explanation?</span>
+    <button class="btn-save" id="save-btn">Save to my history</button>
+  </div>
+
+  <div class="identified-clause" id="identified-clause">
+    <span class="clause-badge" id="clause-contract-type">JCT</span>
+    <span class="clause-name" id="clause-name-text">Identified clause</span>
+    <span class="clause-override" id="clause-override">Not right? Override</span>
+  </div>
+
+  <!-- Upgrade Banner (shown to free users at save limit) -->
+  <div class="upgrade-banner" id="upgrade-banner">
+    <p><strong>You've reached your 5 save limit.</strong> Upgrade to Pro for unlimited saves and PDF export.</p>
+    <button class="btn-upgrade" onclick="showPage('pricing')">Upgrade to Pro — £6.99/mo</button>
+  </div>
+
+  <!-- PDF Export Button (Pro only) -->
+  <button class="btn-pdf" id="pdf-btn">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+    Export as PDF
+  </button>
+
+  <div class="results-grid" id="results-grid">
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="result-icon blue">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1D6FA4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <h3>Plain English explanation</h3>
+      </div>
+      <div class="result-card-body" id="result-plain"></div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="result-icon green">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0F6E56" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3>Commercial implications</h3>
+      </div>
+      <div class="result-card-body" id="result-commercial"></div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="result-icon amber">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#854F0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h3>Actions for the QS</h3>
+      </div>
+      <div class="result-card-body" id="result-actions"></div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="result-icon red">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A32D2D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <h3>Common mistakes</h3>
+      </div>
+      <div class="result-card-body" id="result-mistakes"></div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="result-icon purple">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3C3489" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Practical example</h3>
+      </div>
+      <div class="result-card-body" id="result-example"></div>
+    </div>
+  </div>
+
+  <!-- PDF disclaimer (print only) -->
+  <div class="pdf-disclaimer">Munro IM is an educational tool. Always consult a qualified professional before acting on contract advice. munroim.co.uk</div>
+
+  <div class="chat-section" id="chat-section">
+    <div class="chat-header">
+      <div class="chat-dot"></div>
+      <span>Ask a follow-up question</span>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="suggested-questions" id="suggested-questions"></div>
+    <div class="chat-input-row">
+      <input type="text" id="chat-input" placeholder="e.g. What if the contractor disputes this clause?" />
+      <button class="chat-send-btn" id="chat-send-btn">Send</button>
+    </div>
+  </div>
+
+</div><!-- end main-column -->
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+
+  <!-- PDF header for print only -->
+  <div class="pdf-header" id="pdf-header">
+    <div class="pdf-header-logo">Munro IM</div>
+    <div class="pdf-header-clause" id="pdf-clause-title">Clause Explanation</div>
+    <div class="pdf-header-meta" id="pdf-clause-meta">Infrastructure Management · Contract Clause Explainer</div>
+  </div>
+
+  <!-- Saved History -->
+  <div class="sidebar-card" id="sidebar-history-card">
+    <div class="sidebar-card-header">
+      <h3>Recent saves</h3>
+      <a onclick="toggleHistory()">View all</a>
+    </div>
+    <div id="sidebar-history-list">
+      <div class="sidebar-empty">Sign in to see your saved clauses here.</div>
+    </div>
+  </div>
+
+  <!-- Quick Reference -->
+  <div class="sidebar-card">
+    <div class="sidebar-card-header">
+      <h3>Quick reference</h3>
+    </div>
+
+    <div class="ref-section">
+      <div class="ref-section-title">JCT — Key clauses</div>
+      <div class="ref-item"><span class="ref-clause">4.12</span><span class="ref-desc">Interim payments</span></div>
+      <div class="ref-item"><span class="ref-clause">2.29</span><span class="ref-desc">Relevant events (extensions of time)</span></div>
+      <div class="ref-item"><span class="ref-clause">2.32</span><span class="ref-desc">Liquidated damages</span></div>
+      <div class="ref-item"><span class="ref-clause">4.8</span><span class="ref-desc">Loss and expense</span></div>
+      <div class="ref-item"><span class="ref-clause">3.14</span><span class="ref-desc">Instructions &amp; variations</span></div>
+      <div class="ref-item"><span class="ref-clause">6.1</span><span class="ref-desc">Insurance requirements</span></div>
+      <div class="ref-item"><span class="ref-clause">8.9</span><span class="ref-desc">Termination by employer</span></div>
+    </div>
+
+    <div class="ref-divider"></div>
+
+    <div class="ref-section">
+      <div class="ref-section-title">NEC — Key clauses</div>
+      <div class="ref-item"><span class="ref-clause">60.1</span><span class="ref-desc">Compensation events</span></div>
+      <div class="ref-item"><span class="ref-clause">61</span><span class="ref-desc">Notifying compensation events</span></div>
+      <div class="ref-item"><span class="ref-clause">63</span><span class="ref-desc">Assessing compensation events</span></div>
+      <div class="ref-item"><span class="ref-clause">50</span><span class="ref-desc">Assessing the amount due</span></div>
+      <div class="ref-item"><span class="ref-clause">11.2(13)</span><span class="ref-desc">Defined cost</span></div>
+      <div class="ref-item"><span class="ref-clause">80.1</span><span class="ref-desc">Employer's risks</span></div>
+      <div class="ref-item"><span class="ref-clause">90</span><span class="ref-desc">Termination</span></div>
+    </div>
+  </div>
+
+</aside>
+
+</div><!-- end page-layout -->
+</div><!-- end page-tool -->
+
+<!-- About Page -->
+<div class="page" id="page-about">
+  <div class="about-section">
+    <div class="about-hero">
+      <p class="hero-eyebrow">About Munro IM</p>
+      <h1>Built by a student.<br><em>Built for students.</em></h1>
+      <p>Munro IM was created to make construction contracts less intimidating — and more useful — for the people who work with them every day.</p>
+    </div>
+
+    <div class="about-divider"></div>
+
+    <div class="about-block">
+      <h2>The story</h2>
+      <p>Munro IM was built by Iain Munro, a Quantity Surveying student who noticed a gap between what university teaches and what the industry actually expects. Contract clauses are dense, technical, and often confusing — even for experienced professionals. For graduates and placement students, they can feel impenetrable.</p>
+      <p>The idea was simple: what if you could paste any clause and instantly understand what it means, what it costs, and what you should do about it? No jargon. No textbooks. Just practical, plain-English guidance built for the people on the ground.</p>
+      <p>Munro IM is that tool. It combines deep knowledge of JCT and NEC contracts with AI to give junior construction professionals the confidence to engage with contracts from day one.</p>
+    </div>
+
+    <div class="about-block">
+      <h2>What it does</h2>
+      <div class="about-features">
+        <div class="about-feature">
+          <div class="about-feature-icon" style="background:var(--accent-light);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1D6FA4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <h3>Plain English</h3>
+          <p>Every clause explained clearly, without unnecessary jargon.</p>
+        </div>
+        <div class="about-feature">
+          <div class="about-feature-icon" style="background:var(--green-light);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0F6E56" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <h3>Commercial insight</h3>
+          <p>Understand the money and risk behind every clause.</p>
+        </div>
+        <div class="about-feature">
+          <div class="about-feature-icon" style="background:var(--amber-light);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#854F0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <h3>QS actions</h3>
+          <p>Concrete steps you should take — not vague advice.</p>
+        </div>
+        <div class="about-feature">
+          <div class="about-feature-icon" style="background:var(--purple-light);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3C3489" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3>Real examples</h3>
+          <p>Practical scenarios set on UK construction projects.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-block">
+      <h2>Who it's for</h2>
+      <p>Munro IM is designed for anyone early in their construction career — graduate QSs, assistant QSs, placement students, and junior project managers working with JCT or NEC contracts in the UK.</p>
+      <p>It is not a substitute for professional legal advice. It is an educational tool to help you understand, learn, and ask better questions. Always consult a qualified professional before acting on contract matters.</p>
+    </div>
+
+    <div class="about-cta">
+      <h2>Ready to try it?</h2>
+      <p>Paste your first clause and see it explained in seconds.</p>
+      <button onclick="showPage('tool')">Go to the tool</button>
+    </div>
+  </div>
+</div><!-- end page-about -->
+
+
+<!-- Pricing Page -->
+<div class="page" id="page-pricing">
+  <div class="pricing-section" style="max-width:900px;margin:0 auto;padding:3rem 1.5rem 6rem;">
+    <div class="pricing-hero">
+      <p class="hero-eyebrow">Pricing</p>
+      <h1>Simple, honest<br><em>pricing</em></h1>
+      <p>Start free. Upgrade when Munro IM becomes part of your workflow.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;align-items:stretch;">
+
+      <!-- Free -->
+      <div class="pricing-card">
+        <div class="pricing-tier">Free</div>
+        <div class="pricing-price">£0 <span style="font-family:'Inter',sans-serif;font-size:15px;font-weight:400;color:var(--text-faint);">/ month</span></div>
+        <div class="pricing-desc">For students and those trying it out.</div>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> 10 clause explanations per day</li>
+          <li><span class="check">✓</span> Auto JCT &amp; NEC identification</li>
+          <li><span class="check">✓</span> All 5 output sections</li>
+          <li><span class="check">✓</span> Follow-up chat on every clause</li>
+          <li><span class="cross">✗</span> Save clauses</li>
+          <li><span class="cross">✗</span> PDF export</li>
+          <li><span class="cross">✗</span> History page</li>
+        </ul>
+        <button class="btn-pricing outline" onclick="showPage('tool')">Start for free</button>
+      </div>
+
+      <!-- Professional -->
+      <div class="pricing-card featured">
+        <div class="pricing-popular">Most popular</div>
+        <div class="pricing-tier">Professional <span class="pro-badge">PRO</span></div>
+        <div class="pricing-price">£6.99 <span style="font-family:'Inter',sans-serif;font-size:15px;font-weight:400;color:var(--text-faint);">/ month</span></div>
+        <div class="pricing-desc">For individual QSs who use it every day.</div>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> <strong>Unlimited</strong> explanations</li>
+          <li><span class="check">✓</span> Auto JCT &amp; NEC identification</li>
+          <li><span class="check">✓</span> All 5 output sections</li>
+          <li><span class="check">✓</span> Follow-up chat on every clause</li>
+          <li><span class="check">✓</span> Save up to 50 clauses</li>
+          <li><span class="check">✓</span> PDF export</li>
+          <li><span class="check">✓</span> Full history page &amp; rename</li>
+        </ul>
+        <button class="btn-pricing primary" onclick="handleUpgradeClick()">Upgrade to Professional</button>
+      </div>
+
+      <!-- Team -->
+      <div class="pricing-card">
+        <div class="pricing-tier">Team</div>
+        <div class="pricing-price">£29.99 <span style="font-family:'Inter',sans-serif;font-size:15px;font-weight:400;color:var(--text-faint);">/ month</span></div>
+        <div class="pricing-desc">For small teams of up to 5 people.</div>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> Everything in Professional</li>
+          <li><span class="check">✓</span> Up to 5 team members</li>
+          <li><span class="check">✓</span> Single shared billing</li>
+          <li><span class="check">✓</span> Priority support</li>
+          <li><span class="check">✓</span> Early access to new features</li>
+          <li><span class="check">✓</span> Shared clause library <em style="font-size:11px;color:var(--text-faint);">(coming soon)</em></li>
+        </ul>
+        <button class="btn-pricing primary" onclick="handleTeamClick()">Get Team plan</button>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="pricing-card">
+        <div class="pricing-tier">Enterprise</div>
+        <div class="pricing-price" style="font-size:42px;letter-spacing:-0.02em;">Custom</div>
+        <div class="pricing-desc">For firms with 6 or more people.</div>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> Everything in Team</li>
+          <li><span class="check">✓</span> 6+ team members</li>
+          <li><span class="check">✓</span> Tailored onboarding</li>
+          <li><span class="check">✓</span> Invoicing available</li>
+          <li><span class="check">✓</span> Dedicated support</li>
+          <li><span class="check">✓</span> Custom contract types on request</li>
+        </ul>
+        <button class="btn-pricing outline" onclick="handleEnterpriseClick()">Contact us</button>
+      </div>
+
+    </div>
+
+    <p class="pricing-note">Payments coming soon. Sign up free to be notified at launch.</p>
+
+    <div class="pricing-faq">
+      <h2>Common questions</h2>
+      <div class="faq-item">
+        <div class="faq-q">Can I try it before paying?</div>
+        <div class="faq-a">Yes — the free tier is fully functional with no time limit. You get 10 clause explanations per day, enough to see the value before committing.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Which contracts does Munro IM cover?</div>
+        <div class="faq-a">Currently JCT and NEC — the two most widely used contract families in UK construction. More contract types are planned, with early access for Team and Enterprise customers.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is this a replacement for legal advice?</div>
+        <div class="faq-a">No. Munro IM is an educational tool to help you understand and engage with contracts. Always consult a qualified professional before acting on contract matters.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How does Team billing work?</div>
+        <div class="faq-a">One payment covers up to 5 users. You manage who has access from your account. Need more than 5? Contact us for an Enterprise plan.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How do I cancel?</div>
+        <div class="faq-a">Cancel any time from your account. No questions asked, no hidden fees. You keep access until the end of your billing period.</div>
+      </div>
+    </div>
+  </div>
+</div><!-- end page-pricing -->
+
+
+<!-- History Page -->
+<div class="page" id="page-history">
+  <main style="max-width:860px;margin:0 auto;padding:3rem 1.5rem 6rem;">
+  <div class="history-page-section">
+
+    <!-- Not signed in state -->
+    <div id="history-not-signed-in" class="history-not-signed-in" style="display:none;">
+      <h3>Sign in to view your history</h3>
+      <p>Create a free account to save clause explanations and access them any time.</p>
+      <button class="btn-primary" onclick="showModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Sign in or create account
+      </button>
+    </div>
+
+    <!-- Signed in state -->
+    <div id="history-signed-in" style="display:none;">
+      <div class="history-page-hero">
+        <p class="hero-eyebrow">My History</p>
+        <h1>Saved clauses</h1>
+        <p id="history-page-count">Loading your saved clauses...</p>
+      </div>
+
+      <div class="history-search-row">
+        <input type="text" class="history-search" id="history-search" placeholder="Search by clause name or contract type..." oninput="filterHistory()" />
+        <button class="history-filter-pill active" data-filter="all" onclick="setHistoryFilter('all', this)">All</button>
+        <button class="history-filter-pill" data-filter="JCT" onclick="setHistoryFilter('JCT', this)">JCT</button>
+        <button class="history-filter-pill" data-filter="NEC" onclick="setHistoryFilter('NEC', this)">NEC</button>
+      </div>
+
+      <div id="history-page-list"></div>
+    </div>
+
+  </div>
+  </main>
+</div><!-- end page-history -->
+
+</main>
+
+<footer>
+  <strong>Munro IM</strong> — Infrastructure Management<br>
+  <span style="margin:0 0.5rem;">
+    <a href="#" onclick="showPage('tool')" style="color:var(--text-faint);text-decoration:none;">Tool</a> &nbsp;·&nbsp;
+    <a href="#" onclick="showPage('about')" style="color:var(--text-faint);text-decoration:none;">About</a>
+  </span><br>
+  This tool is for educational purposes only. Always consult a qualified professional before acting on contract advice.<br>
+  &copy; 2026 Munro IM. Built by Iain Munro.
+</footer>
+
+<script>
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+  const navBtn = document.getElementById('nav-' + page);
+  if (navBtn) navBtn.classList.add('active-nav');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function handleAuthClick() {
+  if (typeof currentUser !== 'undefined' && currentUser) { signOut(); } else { showModal(); }
+}
+
+function toggleHistory() {
+  var hp = document.getElementById('history-panel');
+  hp.style.display = hp.style.display === 'block' ? 'none' : 'block';
+  if (hp.style.display === 'block') loadHistory();
+}
+
+const SYSTEM_PROMPT = `You are an expert quantity surveyor and construction contract specialist with deep knowledge of JCT (Joint Contracts Tribunal) and NEC (New Engineering Contract) contracts used in the UK construction industry.
+
+Your role is to help graduate QSs, assistant QSs, placement students, and junior project managers understand contract clauses clearly and practically.
+
+When a user pastes a contract clause, you must respond ONLY with a valid JSON object in this exact format:
+
+{
+  "contractType": "JCT" or "NEC" or "Unknown",
+  "clauseIdentification": "A short name for this clause, e.g. 'Liquidated Damages (JCT clause 2.32)'",
+  "plain": "Plain English explanation of what this clause means. Write as if explaining to a bright graduate on their first week. 2-3 paragraphs.",
+  "commercial": "The commercial implications for the contractor and employer. What money or risk is at stake? What leverage does each party have? 3-5 bullet points as a plain list starting each line with '• '.",
+  "actions": "Specific actions a QS should take in response to this clause. Be practical and concrete. 4-6 bullet points starting each line with '• '.",
+  "mistakes": "Common mistakes junior QSs and PMs make with this type of clause. Be direct and honest. 3-5 bullet points starting each line with '• '.",
+  "example": "A realistic practical example set on a UK construction project. Describe a real scenario where this clause comes into play, what happens, and what the QS should do. 2-3 paragraphs.",
+  "suggestedQuestions": ["Question 1?", "Question 2?", "Question 3?"]
+}
+
+Do not include any text outside the JSON. Do not use markdown formatting inside the JSON values. Use plain text only.`;
+
+const CHAT_SYSTEM_PROMPT = `You are an expert quantity surveyor and construction contract specialist with deep knowledge of JCT and NEC contracts. The user has been analysing a contract clause using the Munro IM tool and now has a follow-up question. Answer clearly, practically, and in plain English. Keep answers focused and useful for a graduate QS. Do not use excessive jargon. Format your response as plain text, not JSON. Be concise but thorough.`;
+
+let contractTypeSelected = 'auto';
+let chatHistory = [];
+let clauseContext = '';
+
+document.querySelectorAll('.type-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('.type-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    contractTypeSelected = pill.dataset.type;
+  });
+});
+
+const clauseInput = document.getElementById('clause-input');
+const charHint = document.getElementById('char-hint');
+const explainBtn = document.getElementById('explain-btn');
+const clearBtn = document.getElementById('clear-btn');
+const errorMsg = document.getElementById('error-msg');
+const resultsGrid = document.getElementById('results-grid');
+const identifiedClause = document.getElementById('identified-clause');
+const chatSection = document.getElementById('chat-section');
+
+clauseInput.addEventListener('input', () => {
+  const len = clauseInput.value.trim().length;
+  charHint.textContent = len > 0 ? `${len} characters` : 'Tip: the more complete the clause, the better the explanation.';
+  clearBtn.style.display = len > 0 ? 'inline-flex' : 'none';
+});
+
+clearBtn.addEventListener('click', () => {
+  clauseInput.value = '';
+  charHint.textContent = 'Tip: the more complete the clause, the better the explanation.';
+  clearBtn.style.display = 'none';
+  resultsGrid.style.display = 'none';
+  identifiedClause.style.display = 'none';
+  chatSection.style.display = 'none';
+  errorMsg.style.display = 'none';
+  chatHistory = [];
+  clauseContext = '';
+});
+
+function showLoading() {
+  resultsGrid.style.display = 'flex';
+  identifiedClause.style.display = 'none';
+  ['plain','commercial','actions','mistakes','example'].forEach(id => {
+    document.getElementById('result-' + id).innerHTML = '<div class="loading-lines"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton" style="width:80%"></div></div>';
+  });
+}
+
+function renderMarkup(text) {
+  if (!text) return '';
+  const lines = text.split('\n').filter(l => l.trim());
+  let html = '';
+  let inList = false;
+  lines.forEach(line => {
+    const trimmed = line.trim();
+    if (trimmed.startsWith('• ')) {
+      if (!inList) { html += '<ul>'; inList = true; }
+      html += `<li>${trimmed.slice(2)}</li>`;
+    } else {
+      if (inList) { html += '</ul>'; inList = false; }
+      html += `<p>${trimmed}</p>`;
+    }
+  });
+  if (inList) html += '</ul>';
+  return html;
+}
+
+async function callAPI(body) {
+  const response = await fetch('/api/claude', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return response.json();
+}
+
+
+async function explainClause() {
+  const clause = clauseInput.value.trim();
+  if (!clause) { showError('Please paste a contract clause before clicking Explain.'); return; }
+  if (clause.length < 30) { showError('That looks too short to be a full clause. Please paste more of the contract text.'); return; }
+
+  if (currentUser && !canExplain()) {
+    showError('You have reached your daily limit of 10 explanations. Upgrade to Professional for unlimited access.');
+    return;
+  }
+
+  errorMsg.style.display = 'none';
+  explainBtn.disabled = true;
+  explainBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Analysing...';
+
+  resultsGrid.style.display = 'flex';
+  identifiedClause.style.display = 'none';
+  chatSection.style.display = 'none';
+  saveBar.style.display = 'none';
+  document.getElementById('upgrade-banner').style.display = 'none';
+
+  const sections = ['plain','commercial','actions','mistakes','example'];
+  sections.forEach(function(id) {
+    document.getElementById('result-' + id).innerHTML = '<div class="loading-lines"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton" style="width:75%"></div><div class="skeleton" style="width:85%"></div></div>';
+  });
+
+  resultsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  try {
+    const data = await callAPI({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 4000,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: 'user', content: (contractTypeSelected !== 'auto' ? 'The user has indicated this is a ' + contractTypeSelected + ' contract clause.\n\n' : '') + 'Contract clause:\n\n' + clause }]
+    });
+
+    if (data.error) {
+      console.error('[Munro IM] API error:', data);
+      showError('Something went wrong. Please try again.');
+      resultsGrid.style.display = 'none';
+      return;
+    }
+
+    const rawText = data.content.map(function(i) { return i.text || ''; }).join('');
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      console.error('[Munro IM] No JSON found:', rawText.slice(0, 300));
+      showError('The AI returned an unexpected response. Please try again.');
+      resultsGrid.style.display = 'none';
+      return;
+    }
+
+    let parsed;
+    try { parsed = JSON.parse(jsonMatch[0]); }
+    catch(e) {
+      console.error('[Munro IM] JSON parse failed:', e.message);
+      showError('The AI returned an unexpected response. Please try again.');
+      resultsGrid.style.display = 'none';
+      return;
+    }
+
+    const lockedSections = ['actions', 'mistakes', 'example'];
+    sections.forEach(function(id) {
+      const el = document.getElementById('result-' + id);
+      const isLocked = !currentUser && lockedSections.indexOf(id) !== -1;
+
+      if (isLocked) {
+        // Show blurred content with unlock overlay
+        el.innerHTML = renderMarkup(parsed[id] || '');
+        const card = el.closest('.result-card');
+        card.classList.add('locked');
+
+        const overlay = document.createElement('div');
+        overlay.className = 'locked-overlay';
+        overlay.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><p><strong>Create a free account</strong> to unlock QS actions, common mistakes, and practical examples.</p><button class="btn-unlock" onclick="showModal()">Create free account</button><p class="free-note">Free — no credit card needed</p>';
+        card.appendChild(overlay);
+      } else {
+        const card = el.closest('.result-card');
+        card.classList.remove('locked');
+        const existingOverlay = card.querySelector('.locked-overlay');
+        if (existingOverlay) existingOverlay.remove();
+        el.innerHTML = renderMarkup(parsed[id] || '');
+      }
+    });
+
+    if (parsed.clauseIdentification) {
+      document.getElementById('clause-contract-type').textContent = parsed.contractType || 'Contract';
+      document.getElementById('clause-name-text').textContent = parsed.clauseIdentification;
+      identifiedClause.style.display = 'flex';
+    }
+
+    clauseContext = 'Contract clause analysed:\n' + clause + '\n\nAnalysis:\nPlain English: ' + parsed.plain + '\nCommercial: ' + parsed.commercial + '\nActions: ' + parsed.actions + '\nMistakes: ' + parsed.mistakes + '\nExample: ' + parsed.example;
+    chatHistory = [];
+    lastResult = Object.assign({}, parsed, { clauseText: clause });
+
+    if (currentUser) incrementUsage();
+
+    if (currentUser) {
+      chatSection.style.display = 'block';
+      document.getElementById('chat-messages').innerHTML = '';
+    } else {
+      chatSection.style.display = 'none';
+    }
+
+    const suggestedQs = document.getElementById('suggested-questions');
+    suggestedQs.innerHTML = '';
+    suggestedQs.style.display = 'flex';
+    if (parsed.suggestedQuestions && parsed.suggestedQuestions.length) {
+      parsed.suggestedQuestions.forEach(function(q) {
+        const btn = document.createElement('button');
+        btn.className = 'suggested-q';
+        btn.textContent = q;
+        btn.addEventListener('click', function() { document.getElementById('chat-input').value = q; sendChatMessage(); });
+        suggestedQs.appendChild(btn);
+      });
+    }
+
+    const pdfBtn = document.getElementById('pdf-btn');
+    if (currentUser) {
+      if (checkProStatus()) {
+        pdfBtn.style.display = 'inline-flex';
+      } else if (userSaveCount < FREE_SAVE_LIMIT) {
+        saveBar.style.display = 'flex';
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save to my history';
+        saveBtn.style.background = '';
+      } else {
+        document.getElementById('upgrade-banner').style.display = 'flex';
+      }
+    }
+
+  } catch(err) {
+    console.error('[Munro IM] Error:', err);
+    showError('Something went wrong connecting to the AI. Please try again in a moment.');
+    resultsGrid.style.display = 'none';
+  } finally {
+    explainBtn.disabled = false;
+    explainBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Explain clause';
+  }
+}
+
+
+async function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('chat-send-btn');
+  const messagesEl = document.getElementById('chat-messages');
+  const suggestedQs = document.getElementById('suggested-questions');
+  const question = input.value.trim();
+  if (!question) return;
+  input.value = '';
+  sendBtn.disabled = true;
+  suggestedQs.style.display = 'none';
+  const userMsg = document.createElement('div');
+  userMsg.className = 'msg user';
+  userMsg.innerHTML = '<div class="msg-avatar user">You</div><div class="msg-bubble">' + question + '</div>';
+  messagesEl.appendChild(userMsg);
+  const thinkingMsg = document.createElement('div');
+  thinkingMsg.className = 'msg';
+  thinkingMsg.innerHTML = '<div class="msg-avatar ai">IM</div><div class="msg-bubble" style="color:var(--text-faint);font-style:italic;">Thinking...</div>';
+  messagesEl.appendChild(thinkingMsg);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  chatHistory.push({ role: 'user', content: question });
+  try {
+    const data = await callAPI({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 2000,
+      system: CHAT_SYSTEM_PROMPT,
+      messages: [
+        { role: 'user', content: 'Here is the context for this conversation:\n\n' + clauseContext },
+        { role: 'assistant', content: 'Understood. I have reviewed the clause and the analysis. Please ask your follow-up question.' }
+      ].concat(chatHistory)
+    });
+    const reply = data.content.map(function(i) { return i.text || ''; }).join('').trim();
+    chatHistory.push({ role: 'assistant', content: reply });
+    thinkingMsg.querySelector('.msg-bubble').innerHTML = renderMarkup(reply);
+    thinkingMsg.querySelector('.msg-bubble').style.color = '';
+    thinkingMsg.querySelector('.msg-bubble').style.fontStyle = '';
+  } catch(e) {
+    thinkingMsg.querySelector('.msg-bubble').textContent = 'Something went wrong. Please try again.';
+  } finally {
+    sendBtn.disabled = false;
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+}
+
+explainBtn.addEventListener('click', explainClause);
+document.getElementById('chat-send-btn').addEventListener('click', sendChatMessage);
+document.getElementById('chat-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
+});
+document.getElementById('clause-override').addEventListener('click', () => {
+  identifiedClause.style.display = 'none';
+});
+
+// ── Auth & History ──────────────────────────────────────────────
+
+const SUPABASE_URL = 'https://tdlzsiowcfpaecbwxvzr.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_32kHpwQ0OFsH31uF5PKLuQ_wTCLZyan';
+
+let currentUser = null;
+let currentSession = null;
+let lastResult = null;
+
+// Elements
+const authModal = document.getElementById('auth-modal');
+const authNavLink = document.getElementById('auth-nav-link');
+const historyNavLink = document.getElementById('history-nav-link');
+const modalTitle = document.getElementById('modal-title');
+const modalSub = document.getElementById('modal-sub');
+const modalError = document.getElementById('modal-error');
+const modalSuccess = document.getElementById('modal-success');
+const authEmail = document.getElementById('auth-email');
+const authPassword = document.getElementById('auth-password');
+const authSubmitBtn = document.getElementById('auth-submit-btn');
+const modalToggle = document.getElementById('modal-toggle');
+const modalSwitch = document.getElementById('modal-switch');
+const saveBar = document.getElementById('save-bar');
+const saveBtn = document.getElementById('save-btn');
+const historyPanel = document.getElementById('history-panel');
+const historyList = document.getElementById('history-list');
+
+let isSignUp = false;
+
+function showModal() { authModal.classList.add('active'); modalError.style.display = 'none'; modalSuccess.style.display = 'none'; authEmail.value = ''; authPassword.value = ''; }
+function hideModal() { authModal.classList.remove('active'); }
+
+document.getElementById('modal-close-btn').addEventListener('click', hideModal);
+authModal.addEventListener('click', e => { if (e.target === authModal) hideModal(); });
+
+// Nav handled by inline onclick buttons above
+
+modalToggle.addEventListener('click', () => {
+  isSignUp = !isSignUp;
+  modalTitle.textContent = isSignUp ? 'Create account' : 'Sign in';
+  modalSub.textContent = isSignUp ? 'Join Munro IM for free' : 'Welcome back to Munro IM';
+  authSubmitBtn.textContent = isSignUp ? 'Create account' : 'Sign in';
+  modalToggle.textContent = isSignUp ? 'Sign in' : 'Sign up';
+  modalError.style.display = 'none';
+  modalSuccess.style.display = 'none';
+});
+
+authSubmitBtn.addEventListener('click', async () => {
+  const email = authEmail.value.trim();
+  const password = authPassword.value.trim();
+  if (!email || !password) { showModalError('Please enter your email and password.'); return; }
+  authSubmitBtn.disabled = true;
+  authSubmitBtn.textContent = 'Please wait...';
+  modalError.style.display = 'none';
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: isSignUp ? 'signup' : 'signin', email, password })
+    });
+    const data = await res.json();
+    if (data.error) { showModalError(data.error); return; }
+    if (isSignUp && !data.session) {
+      modalSuccess.textContent = 'Account created! Please check your email to confirm your account, then sign in.';
+      modalSuccess.style.display = 'block';
+      return;
+    }
+    currentUser = data.user;
+    currentSession = data.session;
+    if (data.session && data.session.access_token) {
+      localStorage.setItem('munro_token', data.session.access_token);
+    }
+    onSignedIn();
+    hideModal();
+  } catch(err) {
+    showModalError('Something went wrong. Please try again.');
+  } finally {
+    authSubmitBtn.disabled = false;
+    authSubmitBtn.textContent = isSignUp ? 'Create account' : 'Sign in';
+  }
+});
+
+document.getElementById('google-btn').addEventListener('click', async () => {
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${window.location.origin}`, {
+    headers: { 'apikey': SUPABASE_KEY }
+  });
+  window.location.href = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${window.location.origin}`;
+});
+
+document.getElementById('auth-password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') authSubmitBtn.click();
+});
+
+function showModalError(msg) {
+  modalError.textContent = msg;
+  modalError.style.display = 'block';
+}
+
+function updateSidebarSignIn() {
+  if (!currentUser) {
+    document.getElementById('sidebar-history-list').innerHTML =
+      '<div class="sidebar-empty">Sign in to see your saved clauses here.</div>';
+  }
+}
+
+function onSignedIn() {
+  authNavLink.textContent = 'Sign out';
+
+  // Show chat if results are already showing
+  if (lastResult) {
+    chatSection.style.display = 'block';
+  }
+
+  // Unlock any locked cards if results are already showing
+  if (lastResult) {
+    const lockedSections = ['actions', 'mistakes', 'example'];
+    lockedSections.forEach(function(id) {
+      const el = document.getElementById('result-' + id);
+      const card = el.closest('.result-card');
+      card.classList.remove('locked');
+      const overlay = card.querySelector('.locked-overlay');
+      if (overlay) overlay.remove();
+      el.innerHTML = renderMarkup(lastResult[id] || '');
+    });
+
+    if (!isPro) {
+      saveBar.style.display = 'flex';
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save to my history';
+      saveBtn.style.background = '';
+    }
+  }
+
+  loadHistory();
+  loadSaveCount();
+  loadSidebarHistory();
+}
+
+async function signOut() {
+  await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'signout' }) });
+  currentUser = null;
+  currentSession = null;
+  localStorage.removeItem('munro_token');
+  authNavLink.textContent = 'Sign in';
+  saveBar.style.display = 'none';
+  historyPanel.style.display = 'none';
+}
+
+// Check for existing session via Supabase token in URL hash (Google OAuth callback)
+window.addEventListener('load', async () => {
+  // Check for OAuth callback in URL hash
+  const hash = window.location.hash;
+  if (hash.includes('access_token')) {
+    const params = new URLSearchParams(hash.substring(1));
+    const accessToken = params.get('access_token');
+    if (accessToken) {
+      try {
+        const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${accessToken}` }
+        });
+        const user = await res.json();
+        if (user.id) {
+          currentUser = user;
+          currentSession = { access_token: accessToken };
+          localStorage.setItem('munro_token', accessToken);
+          onSignedIn();
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      } catch(e) { console.error('[Munro IM] OAuth callback error:', e); }
+    }
+    return;
+  }
+
+  loadTodayUsage();
+
+  // Restore session from localStorage on page refresh
+  const savedToken = localStorage.getItem('munro_token');
+  if (savedToken) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${savedToken}` }
+      });
+      const user = await res.json();
+      if (user.id) {
+        currentUser = user;
+        currentSession = { access_token: savedToken };
+        onSignedIn();
+      } else {
+        localStorage.removeItem('munro_token');
+      }
+    } catch(e) {
+      console.error('[Munro IM] Session restore error:', e);
+      localStorage.removeItem('munro_token');
+    }
+  }
+});
+
+// Save a clause
+saveBtn.addEventListener('click', async () => {
+  if (!currentUser || !lastResult || !currentSession) return;
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Saving...';
+  try {
+    const res = await fetch('/api/history', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currentSession.access_token}`
+      },
+      body: JSON.stringify({
+        title: lastResult.clauseIdentification || 'Saved clause',
+        contract_type: lastResult.contractType || 'Unknown',
+        clause_text: lastResult.clauseText,
+        explanation: lastResult,
+        user_id: currentUser.id
+      })
+    });
+    if (res.ok) {
+      userSaveCount++;
+      saveBtn.textContent = 'Saved!';
+      saveBtn.style.background = 'var(--green)';
+      setTimeout(() => { saveBar.style.display = 'none'; updateProUI(); }, 2000);
+      loadHistory();
+      loadSidebarHistory();
+    } else {
+      saveBtn.textContent = 'Error — try again';
+      saveBtn.disabled = false;
+    }
+  } catch(e) {
+    saveBtn.textContent = 'Error — try again';
+    saveBtn.disabled = false;
+  }
+});
+
+// Load a saved explanation into the results panel
+function loadSavedExplanation(item) {
+  const exp = item.explanation;
+  if (!exp) return;
+
+  document.getElementById('result-plain').innerHTML = renderMarkup(exp.plain || '');
+  document.getElementById('result-commercial').innerHTML = renderMarkup(exp.commercial || '');
+  document.getElementById('result-actions').innerHTML = renderMarkup(exp.actions || '');
+  document.getElementById('result-mistakes').innerHTML = renderMarkup(exp.mistakes || '');
+  document.getElementById('result-example').innerHTML = renderMarkup(exp.example || '');
+
+  document.getElementById('clause-contract-type').textContent = item.contract_type || 'Contract';
+  document.getElementById('clause-name-text').textContent = item.title;
+  document.getElementById('identified-clause').style.display = 'flex';
+
+  document.getElementById('results-grid').style.display = 'flex';
+  document.getElementById('chat-section').style.display = 'block';
+  saveBar.style.display = 'none';
+  historyPanel.style.display = 'none';
+
+  clauseContext = `Contract clause: ${item.clause_text}\n\nPlain English: ${exp.plain}\nCommercial: ${exp.commercial}\nActions: ${exp.actions}\nMistakes: ${exp.mistakes}\nExample: ${exp.example}`;
+  chatHistory = [];
+  document.getElementById('chat-messages').innerHTML = '';
+  document.getElementById('suggested-questions').innerHTML = '';
+
+  document.getElementById('results-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Load history
+async function loadHistory() {
+  if (!currentUser || !currentSession) return;
+  try {
+    const res = await fetch('/api/history', {
+      headers: { 'Authorization': `Bearer ${currentSession.access_token}` }
+    });
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) {
+      historyList.innerHTML = '<div class="history-empty">No saved clauses yet. Explain a clause and save it to see it here.</div>';
+      return;
+    }
+    const items = data;
+    historyList.innerHTML = items.map(item => {
+      const date = new Date(item.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      return `<div class="history-item" data-id="${item.id}">
+        <div class="history-item-info">
+          <div class="history-item-title">${item.title}</div>
+          <div class="history-item-meta">${date}</div>
+        </div>
+        <span class="history-item-badge">${item.contract_type || 'Contract'}</span>
+      </div>`;
+    }).join('');
+
+    // Add click handlers to load saved explanations
+    historyList.querySelectorAll('.history-item').forEach((el, i) => {
+      el.addEventListener('click', () => loadSavedExplanation(items[i]));
+    });
+  } catch(e) {
+    console.error('[Munro IM] History load error:', e);
+  }
+}
+
+
+// ── Pro Tier Logic ───────────────────────────────────────────────
+
+const FREE_SAVE_LIMIT = 5;
+let userSaveCount = 0;
+let isPro = false; // Will be set from Supabase profile in future
+
+function handleUpgradeClick() {
+  alert('Professional subscriptions are coming soon! Sign up for a free account and we will notify you at launch.');
+}
+
+function checkProStatus() {
+  // In future this will check Supabase for is_pro flag
+  // For now, owner can manually set isPro = true in console
+  return isPro;
+}
+
+function updateProUI() {
+  const pdfBtn = document.getElementById('pdf-btn');
+  const upgradeBanner = document.getElementById('upgrade-banner');
+
+  if (checkProStatus()) {
+    // Pro user — show PDF button, hide upgrade banner
+    if (pdfBtn && resultsGrid.style.display === 'flex') {
+      pdfBtn.style.display = 'inline-flex';
+    }
+    upgradeBanner.style.display = 'none';
+  } else {
+    // Free user — check save count
+    if (userSaveCount >= FREE_SAVE_LIMIT && currentUser) {
+      upgradeBanner.style.display = 'flex';
+      saveBar.style.display = 'none';
+    }
+  }
+}
+
+// PDF Export
+function populatePDFHeader(title, contractType, date) {
+  document.getElementById('pdf-clause-title').textContent = title || 'Clause Explanation';
+  document.getElementById('pdf-clause-meta').textContent =
+    'Infrastructure Management · ' + (contractType || 'Contract') + ' · Exported ' + (date || new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }));
+}
+
+document.getElementById('pdf-btn').addEventListener('click', () => {
+  const clauseTitle = document.getElementById('clause-name-text').textContent || 'Clause Explanation';
+  const contractType = document.getElementById('clause-contract-type').textContent || '';
+  populatePDFHeader(clauseTitle, contractType);
+  window.print();
+});
+
+// Load sidebar history
+async function loadSidebarHistory() {
+  if (!currentUser || !currentSession) return;
+  const el = document.getElementById('sidebar-history-list');
+  try {
+    const res = await fetch('/api/history', {
+      headers: { 'Authorization': `Bearer ${currentSession.access_token}` }
+    });
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) {
+      el.innerHTML = '<div class="sidebar-empty">No saved clauses yet. Explain a clause and save it.</div>';
+      return;
+    }
+    const items = data.slice(0, 5);
+    el.innerHTML = items.map((item, i) => {
+      const date = new Date(item.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+      return `<div class="sidebar-history-item" data-idx="${i}">
+        <span class="sidebar-history-badge">${item.contract_type || '?'}</span>
+        <span class="sidebar-history-title">${item.title}</span>
+        <span class="sidebar-history-date">${date}</span>
+      </div>`;
+    }).join('');
+    el.querySelectorAll('.sidebar-history-item').forEach((el, i) => {
+      el.addEventListener('click', () => loadSavedExplanation(data[i]));
+    });
+  } catch(e) {
+    console.error('[Munro IM] Sidebar history error:', e);
+  }
+}
+
+// Load save count from history length
+async function loadSaveCount() {
+  if (!currentUser || !currentSession) return;
+  try {
+    const res = await fetch('/api/history', {
+      headers: { 'Authorization': `Bearer ${currentSession.access_token}` }
+    });
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      userSaveCount = data.length;
+      updateProUI();
+    }
+  } catch(e) {
+    console.error('[Munro IM] Save count error:', e);
+  }
+}
+
+
+// ── History Page ─────────────────────────────────────────────────
+
+let allHistoryItems = [];
+let historyFilter = 'all';
+
+function handleHistoryNav() {
+  if (!currentUser) {
+    showPage('history');
+    document.getElementById('history-not-signed-in').style.display = 'block';
+    document.getElementById('history-signed-in').style.display = 'none';
+  } else {
+    showPage('history');
+    document.getElementById('history-not-signed-in').style.display = 'none';
+    document.getElementById('history-signed-in').style.display = 'block';
+    loadHistoryPage();
+  }
+}
+
+async function loadHistoryPage() {
+  if (!currentUser || !currentSession) return;
+  const listEl = document.getElementById('history-page-list');
+  const countEl = document.getElementById('history-page-count');
+  listEl.innerHTML = '<div style="color:var(--text-faint);font-size:13px;padding:1rem 0;">Loading...</div>';
+
+  try {
+    const res = await fetch('/api/history?limit=100', {
+      headers: { 'Authorization': `Bearer ${currentSession.access_token}` }
+    });
+    const data = await res.json();
+    allHistoryItems = Array.isArray(data) ? data : [];
+    countEl.textContent = allHistoryItems.length === 0
+      ? 'No saved clauses yet.'
+      : `${allHistoryItems.length} saved clause${allHistoryItems.length === 1 ? '' : 's'}`;
+    renderHistoryPage();
+  } catch(e) {
+    console.error('[Munro IM] History page load error:', e);
+    listEl.innerHTML = '<div style="color:var(--red);font-size:13px;">Failed to load history. Please try again.</div>';
+  }
+}
+
+function setHistoryFilter(filter, btn) {
+  historyFilter = filter;
+  document.querySelectorAll('.history-filter-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderHistoryPage();
+}
+
+function filterHistory() { renderHistoryPage(); }
+
+function renderHistoryPage() {
+  const listEl = document.getElementById('history-page-list');
+  const search = (document.getElementById('history-search').value || '').toLowerCase();
+
+  let items = allHistoryItems.filter(item => {
+    const matchesFilter = historyFilter === 'all' || (item.contract_type || '').toUpperCase() === historyFilter;
+    const matchesSearch = !search ||
+      (item.title || '').toLowerCase().includes(search) ||
+      (item.contract_type || '').toLowerCase().includes(search);
+    return matchesFilter && matchesSearch;
+  });
+
+  if (items.length === 0) {
+    listEl.innerHTML = `<div class="history-page-empty">
+      <h3>No results found</h3>
+      <p>Try adjusting your search or filter.</p>
+    </div>`;
+    return;
+  }
+
+  // Group by month and year
+  const groups = {};
+  items.forEach(item => {
+    const date = new Date(item.created_at);
+    const key = date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(item);
+  });
+
+  listEl.innerHTML = Object.entries(groups).map(([month, groupItems]) => `
+    <div class="history-month-group">
+      <div class="history-month-label">${month}</div>
+      ${groupItems.map(item => {
+        const date = new Date(item.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        return `<div class="history-page-item" data-id="${item.id}">
+          <span class="history-page-item-badge">${item.contract_type || '?'}</span>
+          <div class="history-page-item-info">
+            <div class="history-page-item-title">${item.title}</div>
+            <div class="history-page-item-date">${date}</div>
+          </div>
+          <div class="three-dot-menu">
+            <button class="three-dot-btn" title="Options" onclick="toggleDropdown('menu-${item.id}', event)">⋯</button>
+            <div class="dropdown-menu" id="menu-${item.id}">
+              <button class="dropdown-item" onclick="openRenameModal('${item.id}', '${item.title.replace(/'/g, "\\'")}', event)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Rename
+              </button>
+              <button class="dropdown-item" onclick="exportItemPDF('${item.id}', event)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                Export PDF
+              </button>
+              <button class="dropdown-item danger" onclick="deleteHistoryItem('${item.id}', event)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/><path d="M10,11v6M14,11v6"/></svg>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  `).join('');
+
+  // Add click handlers to load items (excluding delete button)
+  listEl.querySelectorAll('.history-page-item').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (e.target.classList.contains('history-page-item-delete')) return;
+      const id = el.dataset.id;
+      const item = allHistoryItems.find(i => i.id === id);
+      if (item) {
+        loadSavedExplanation(item);
+        showPage('tool');
+      }
+    });
+  });
+}
+
+async function deleteHistoryItem(id, e) {
+  e.stopPropagation();
+  if (!confirm('Delete this saved clause?')) return;
+  try {
+    const res = await fetch('/api/history', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currentSession.access_token}`
+      },
+      body: JSON.stringify({ id })
+    });
+    if (res.ok) {
+      allHistoryItems = allHistoryItems.filter(i => i.id !== id);
+      userSaveCount = Math.max(0, userSaveCount - 1);
+      renderHistoryPage();
+      loadSidebarHistory();
+      document.getElementById('history-page-count').textContent =
+        `${allHistoryItems.length} saved clause${allHistoryItems.length === 1 ? '' : 's'}`;
+    }
+  } catch(e) {
+    console.error('[Munro IM] Delete error:', e);
+  }
+}
+
+
+// ── Three-dot menu ───────────────────────────────────────────────
+
+let activeDropdown = null;
+let renameItemId = null;
+
+function toggleDropdown(menuId, e) {
+  e.stopPropagation();
+  const menu = document.getElementById(menuId);
+  if (activeDropdown && activeDropdown !== menu) {
+    activeDropdown.classList.remove('open');
+  }
+  menu.classList.toggle('open');
+  activeDropdown = menu.classList.contains('open') ? menu : null;
+}
+
+document.addEventListener('click', () => {
+  if (activeDropdown) {
+    activeDropdown.classList.remove('open');
+    activeDropdown = null;
+  }
+});
+
+// ── Rename ───────────────────────────────────────────────────────
+
+function openRenameModal(id, currentTitle, e) {
+  e.stopPropagation();
+  if (activeDropdown) { activeDropdown.classList.remove('open'); activeDropdown = null; }
+  renameItemId = id;
+  document.getElementById('rename-input').value = currentTitle;
+  document.getElementById('rename-modal').classList.add('active');
+  setTimeout(() => document.getElementById('rename-input').select(), 50);
+}
+
+function closeRenameModal() {
+  document.getElementById('rename-modal').classList.remove('active');
+  renameItemId = null;
+}
+
+async function confirmRename() {
+  const newTitle = document.getElementById('rename-input').value.trim();
+  if (!newTitle || !renameItemId) return;
+  try {
+    const res = await fetch('/api/history', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currentSession.access_token}`
+      },
+      body: JSON.stringify({ id: renameItemId, title: newTitle })
+    });
+    if (res.ok) {
+      const item = allHistoryItems.find(i => i.id === renameItemId);
+      if (item) item.title = newTitle;
+      renderHistoryPage();
+      loadSidebarHistory();
+      closeRenameModal();
+    }
+  } catch(e) {
+    console.error('[Munro IM] Rename error:', e);
+  }
+}
+
+document.getElementById('rename-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') confirmRename();
+  if (e.key === 'Escape') closeRenameModal();
+});
+
+// ── PDF from history item ─────────────────────────────────────────
+
+function exportItemPDF(id, e) {
+  e.stopPropagation();
+  if (activeDropdown) { activeDropdown.classList.remove('open'); activeDropdown = null; }
+  const item = allHistoryItems.find(i => i.id === id);
+  if (!item) return;
+  loadSavedExplanation(item);
+  showPage('tool');
+  setTimeout(() => {
+    const date = new Date(item.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    populatePDFHeader(item.title, item.contract_type, date);
+    window.print();
+  }, 400);
+}
+
+// ── Free tier usage counter ───────────────────────────────────────
+
+const DAILY_FREE_LIMIT = 10;
+let todayUsage = 0;
+
+function getTodayKey() {
+  return 'munro_usage_' + new Date().toISOString().slice(0, 10);
+}
+
+function loadTodayUsage() {
+  const key = getTodayKey();
+  todayUsage = parseInt(localStorage.getItem(key) || '0', 10);
+  updateUsageCounter();
+}
+
+function incrementUsage() {
+  if (isPro) return;
+  const key = getTodayKey();
+  todayUsage++;
+  localStorage.setItem(key, todayUsage);
+  updateUsageCounter();
+}
+
+function updateUsageCounter() {
+  if (isPro || !currentUser) return;
+  const counter = document.getElementById('usage-counter');
+  const text = document.getElementById('usage-text');
+  const fill = document.getElementById('usage-fill');
+  const remaining = Math.max(0, DAILY_FREE_LIMIT - todayUsage);
+  const pct = (remaining / DAILY_FREE_LIMIT) * 100;
+
+  counter.style.display = 'flex';
+  text.textContent = remaining === 0
+    ? 'Daily limit reached — upgrade for unlimited'
+    : `${remaining} explanation${remaining === 1 ? '' : 's'} remaining today`;
+
+  fill.style.width = pct + '%';
+  counter.className = 'usage-counter' + (pct <= 30 ? ' danger' : pct <= 60 ? ' warning' : '');
+}
+
+function canExplain() {
+  if (isPro) return true;
+  if (currentUser) return true; // logged in users: check sub tier in future
+  return todayUsage < DAILY_FREE_LIMIT;
+}
+
+// ── Team / Enterprise click handlers ─────────────────────────────
+
+function handleTeamClick() {
+  alert('Team plans are coming soon! Sign up for a free account and we will notify you at launch. For immediate enquiries, email hello@munroim.co.uk');
+}
+
+function handleEnterpriseClick() {
+  window.location.href = 'mailto:hello@munroim.co.uk?subject=Munro IM Enterprise Enquiry';
+}
+
+</script>
+</body>
+</html>
